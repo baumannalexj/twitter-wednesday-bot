@@ -1,1 +1,3 @@
-.python-version
+**/.python-version
+**/.pytest_cache
+**/*.iml
