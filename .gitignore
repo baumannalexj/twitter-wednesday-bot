@@ -1,3 +1,5 @@
 **/.python-version
 **/.pytest_cache
 **/*.iml
+**/*pycache*
+**/.DS_Store*
