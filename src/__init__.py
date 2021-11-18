@@ -1,14 +1,15 @@
 import logging
 import os
+from datetime import datetime, timezone
 
-import twitter_service
-import twitter_auth
+from src.date_helper import is_wednesday
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL") or "DEBUG"
 
 logging.root.setLevel(LOG_LEVEL)
 
-if __name__ == '__main__':
 
-    twitter_service.post_wednesday_tweet()
-    print('do something here')
+
+if __name__ == '__main__':
+    print(datetime.now(timezone.utcoffset(14)))
+    print(logging.root)

@@ -45,8 +45,13 @@ def _get_twitter_client():
     return oauth1_session_client
 
 
+def post_non_wednesday_tweet():
+    message = random.choice(constants.MESSAGES_NOT_WEDNESDAY)
+    post_tweet(text=message)
+
+
 def post_wednesday_tweet():
-    message = random.choice(constants.ITS_WEDNESDAY_MESSAGES)
+    message = random.choice(constants.MESSAGES_ITS_WEDNESDAY)
     post_tweet(text=message,
                media_ids=[constants.TWITTER_MEDIA_ID_CAPTAIN_ITS_WEDNESDAY])
 
