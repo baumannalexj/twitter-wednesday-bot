@@ -10,7 +10,7 @@ MINUTES_LAMBDA_TIMEOUT = 2
 
 def get_next_earliest_wednesday():
     the_first_next_wed = datetime.datetime.now(tz=EARLIEST_TZ)
-    while the_first_next_wed.isoweekday() != 3:
+    while the_first_next_wed.isoweekday() != DOW_WEDNESDAY:
         the_first_next_wed += datetime.timedelta(days=1)
 
     return the_first_next_wed
@@ -37,3 +37,7 @@ def seconds_until_next_earliest_wednesday():
     return math.floor(
         (the_first_next_wed - datetime.datetime.now(tz=EARLIEST_TZ)).total_seconds()
     )
+
+
+if __name__ == "__main__":
+    get_next_earliest_wednesday()

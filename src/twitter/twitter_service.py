@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 import random
 
 import requests
@@ -109,22 +110,23 @@ def reply_to_wednesday_tweet(tweet):
     else:
         seconds_until_wednesday = seconds_until_next_earliest_wednesday()
 
-        minutes_until = seconds_until_wednesday // 60
-        hours_until = minutes_until // 60
-        days_until = hours_until // 24
+        minutes_until = math.floor(seconds_until_wednesday // 60)
+        hours_until = math.floor(minutes_until // 60)
+        days_until = math.floor(hours_until // 24)
 
         if days_until > 0:
             number_used = days_until
             unit = "day" if days_until == 1 else "days"
-            message = f"Still {number_used} {unit} until Wednesday."
-        elif hours_until > 0:
+            message = f"Still {number_used} {unit} and {hours_until % 24} hours until Earth sees Wednesday."
+        elif hours_until > 1:
             number_used = hours_until
             unit = "hour" if hours_until == 1 else "hours"
-            message = f"We're {number_used} {unit} away until Earth hits Wednesday."
-        elif minutes_until > 0:
+            message = f"We're {number_used} {unit}" \
+                      f" and {minutes_until % 60} minutes away until Earth hits Wednesday."
+        elif minutes_until > 1:
             number_used = minutes_until
             unit = "minute" if minutes_until == 1 else "minutes"
-            message = f"Earth is just {number_used} {unit} from Wednesday."
+            message = f"Earth is just {number_used} {unit} and {seconds_until_wednesday % 60} seconds from Wednesday."
         else:
             number_used = seconds_until_wednesday
             unit = "second" if seconds_until_wednesday == 1 else "seconds"

@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 
 from ..date_helper import get_time_min_ago, MINUTES_LAMBDA_TIMEOUT
 from ..twitter.twitter_service import reply_for_wednesday_tweets
