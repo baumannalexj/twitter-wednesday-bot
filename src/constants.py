@@ -19,3 +19,19 @@ MESSAGES_NOT_WEDNESDAY = ["Today is not Wednesday.",
                           "Sorry, you'll have to wait.",
                           "Nope.",
                           "Not yet."]
+
+SEARCH_TERMS_WEDNESDAY_HASHTAGS = [
+    "#isitwednesday",
+    "#isitwednesdayyet",
+    "#whensitwednesday",
+    "#whenisitwednesday",
+    "#whenswednesday",
+]
+
+STREAM_RULES = [
+    {"value": "#isitwednesday", "tag": "hashtag #isitwednesday"},
+    {"value": "#isitwednesdayyet", "tag": "hashtag #isitwednesdayyet"},
+    {"value": "#whensitwednesday", "tag": "hashtag #whensitwednesday"},
+    {"value": "#whenisitwednesday", "tag": "hashtag #whenisitwednesday"},
+    {"value": "#whenswednesday", "tag": "hashtag #whenswednesday"},
+]

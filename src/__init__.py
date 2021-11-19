@@ -2,11 +2,13 @@ import logging
 import os
 from datetime import datetime, timezone
 
-from src.date_helper import is_wednesday
+from .date_helper import is_wednesday_for_tz
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL") or "DEBUG"
 
 logging.root.setLevel(LOG_LEVEL)
+
+print("Main __init__ loaded")
 
 
 
