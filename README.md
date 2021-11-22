@@ -9,16 +9,20 @@ Prereqs:
 - Poetry
 
 
-# Start Shell
+## Start Shell
+
 `$ poetry shell`
 
 
-#Build
+## Build
+
 ``$ make build``
 
 
-#Package
+## Package
+
 `$ make package`
 
-#Deploy
+## Deploy
+
 `$ make deploy`
