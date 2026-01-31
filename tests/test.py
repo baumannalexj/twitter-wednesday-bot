@@ -1,5 +1,6 @@
 
 
 def test_version():
-    pass
-    # assert
+    print("a test test")
+    # pass
+    assert 1==2
