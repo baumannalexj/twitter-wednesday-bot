@@ -4,4 +4,7 @@
 **/*pycache*
 **/.DS_Store*
 **/dist
+**/build
 **/package
+**/.venv
+.claude/settings.local.json

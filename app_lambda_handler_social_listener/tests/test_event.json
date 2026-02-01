@@ -1,0 +1,13 @@
+{
+  "version": "0",
+  "id": "ccf8ab12-3427-c84a-c27e-7f5262253094",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "564918604829",
+  "time": "2026-02-01T00:01:43Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:events:us-east-1:564918604829:rule/every-2-min"
+  ],
+  "detail": {}
+}

@@ -2,11 +2,11 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from clients.src.aws.ssm_client import get_parameter_datetime, put_parameter_datetime
-from core.src.constants import SEARCH_TERMS_WEDNESDAY_HASHTAGS
-from core.src.date_helper import get_time_min_ago, MINUTES_LAMBDA_TIMEOUT
-from core.src.tweet_builder import build_wednesday_reply
-from clients.src.twitter.twitter_client import search_recent_tweets, post_tweet
+from clients.aws.ssm_client import get_parameter_datetime, put_parameter_datetime
+from core.constants import SEARCH_TERMS_WEDNESDAY_HASHTAGS
+from core.date_helper import get_time_min_ago, MINUTES_LAMBDA_TIMEOUT
+from core.tweet_builder import build_wednesday_reply
+from clients.twitter.tweet_client import search_recent_tweets, post_tweet
 
 SSM_PARAM_NAME = "param-store-db-social-listening"
 RATE_LIMIT_INTERVAL = timedelta(hours=10)

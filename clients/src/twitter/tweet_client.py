@@ -3,7 +3,7 @@ import logging
 
 import requests
 
-from clients.src.twitter.auth import get_twitter_oauth1_client, get_3_legged_auth_client, get_bearer_auth_header
+from .auth import get_bearer_auth_header
 
 # TODO move to application config file
 

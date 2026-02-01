@@ -3,7 +3,7 @@ from typing import List
 
 import requests
 
-from clients.src.twitter.auth import get_bearer_auth_header
+from clients.twitter.auth import get_bearer_auth_header
 
 URL_TWITTER_STREAM = "https://api.twitter.com/2/tweets/search/stream"
 

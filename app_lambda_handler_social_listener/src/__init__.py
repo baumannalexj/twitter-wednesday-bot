@@ -1,5 +1,5 @@
 import logging
-from src import configuration
+from . import configuration
 
 log_level = configuration.LOG_LEVEL
 logging.root.setLevel(log_level)

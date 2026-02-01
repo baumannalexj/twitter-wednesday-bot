@@ -1,8 +1,8 @@
 import math
 import random
 
-from core.src import constants
-from core.src.date_helper import is_it_wednesday_somewhere, seconds_until_next_earliest_wednesday
+from core import constants
+from core.date_helper import is_it_wednesday_somewhere, seconds_until_next_earliest_wednesday
 
 
 def build_wednesday_reply(tweet):
