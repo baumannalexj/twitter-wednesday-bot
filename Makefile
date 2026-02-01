@@ -24,7 +24,7 @@ deploy-reply-service:
 	aws lambda update-function-code\
  	--function-name reply-to-wednesday-hashtags\
  	--zip-file fileb://dist/artifact.zip
-	#--handler src/listening/lambda_listening.handler how to set handler and runtime here?
+	#--handler src/app_lambda_handler_social_listener/lambda_listening.handler how to set handler and runtime here?
 
 
 

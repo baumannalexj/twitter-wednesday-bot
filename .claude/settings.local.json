@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(poetry install:*)",
+      "WebSearch",
+      "Bash(aws lambda get-policy:*)",
+      "Bash(aws lambda list-event-source-mappings:*)",
+      "Bash(aws events list-rules:*)",
+      "Bash(aws logs describe-log-groups:*)",
+      "Bash(aws logs describe-log-streams:*)",
+      "Bash(aws logs get-log-events:*)",
+      "Bash(aws iam list-attached-role-policies:*)",
+      "Bash(aws iam list-role-policies:*)",
+      "Bash(gh api:*)"
+    ]
+  }
+}

@@ -2,7 +2,7 @@ import datetime
 import math
 from zoneinfo import ZoneInfo
 
-DOW_WEDNESDAY = 3
+DAY_OF_WEEK_WEDNESDAY = 3
 EARLIEST_TZ = ZoneInfo("Etc/GMT-14")  # GMT+14 is the earliest TZ. Note: the Etc standard uses negatives
 LAST_TZ = ZoneInfo("Etc/GMT+12")  # GMT-12 is the last TZ before the IDL. Note: the Etc standard uses negatives
 MINUTES_LAMBDA_TIMEOUT = 2
@@ -10,14 +10,14 @@ MINUTES_LAMBDA_TIMEOUT = 2
 
 def get_next_earliest_wednesday():
     the_first_next_wed = datetime.datetime.now(tz=EARLIEST_TZ)
-    while the_first_next_wed.isoweekday() != DOW_WEDNESDAY:
+    while the_first_next_wed.isoweekday() != DAY_OF_WEEK_WEDNESDAY:
         the_first_next_wed += datetime.timedelta(days=1)
 
     return the_first_next_wed
 
 
 def is_wednesday_for_tz(tz_offset=EARLIEST_TZ):
-    return datetime.datetime.now(tz=tz_offset).isoweekday() == DOW_WEDNESDAY
+    return datetime.datetime.now(tz=tz_offset).isoweekday() == DAY_OF_WEEK_WEDNESDAY
 
 
 def is_it_wednesday_somewhere():
@@ -39,5 +39,7 @@ def seconds_until_next_earliest_wednesday():
     )
 
 
+# test harness
 if __name__ == "__main__":
-    get_next_earliest_wednesday()
+    upcoming_wednesday = get_next_earliest_wednesday()
+    print(f"next wednesday:{upcoming_wednesday}")
