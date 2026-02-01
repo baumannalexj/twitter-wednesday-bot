@@ -1,10 +1,10 @@
 import logging
 import os
 
-from core.src.date_helper import is_wednesday_for_tz
+from clients.src.twitter.tweet_client import post_tweet
 from core.src import constants
+from core.src.date_helper import is_wednesday_for_tz
 from core.src.tweet_builder import pick_wednesday_message, pick_non_wednesday_message
-from clients.src.twitter.twitter_client import post_tweet
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL") or "DEBUG"
 logging.root.setLevel(LOG_LEVEL)

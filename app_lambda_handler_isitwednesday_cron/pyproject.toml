@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "app-lambda-handler-isitwednesday-cron"
+version = "0.1.0"
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "core",
+    "clients",
+]
+
+[tool.setuptools]
+packages = ["app_lambda_handler_isitwednesday_cron"]
+
+[tool.setuptools.package-dir]
+"app_lambda_handler_isitwednesday_cron" = "src"
+
+[tool.setuptools.packages.find]
+core = ["core/src"]
