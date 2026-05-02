@@ -3,28 +3,31 @@ auth:
 	aws login
 
 install:
-	uv sync
+	# --link-mode=copy helps w/ PyCharm syncing (on WSL, my projects are symlinked, the slowdown is negligible but can ignore for macos)
+	uv sync --link-mode=copy
+
+# TODO - update packaging to be in app_*/build
 
 package-post-service:
-	rm -rf build/lambda/twitter-wednesday-bot build/lambda/package/twitter-wednesday-bot.zip
-	uv pip install --target build/lambda/twitter-wednesday-bot .
-	mkdir -p build/lambda/package
-	python -m zipfile -c build/lambda/package/twitter-wednesday-bot.zip build/lambda/twitter-wednesday-bot
+	rm -rf build/lambda/app_isitwednesday_post build/lambda/app_isitwednesday_post.zip
+	mkdir -p build/lambda
+	uv pip install --target build/lambda/app_isitwednesday_post app-isitwednesday-post
+	python -m zipfile -c build/lambda/app_isitwednesday_post.zip build/lambda/app_isitwednesday_post
 
 package-reply-service:
-	rm -rf build/lambda/reply-to-wednesday-hashtags build/lambda/package/reply-to-wednesday-hashtags.zip
-	uv pip install --target build/lambda/reply-to-wednesday-hashtags .
-	mkdir -p build/lambda/package
-	python -m zipfile -c build/lambda/package/reply-to-wednesday-hashtags.zip build/lambda/reply-to-wednesday-hashtags
+	rm -rf build/lambda/app_isitwednesday_reply build/lambda/app_isitwednesday_reply.zip
+	mkdir -p build/lambda
+	uv pip install --target build/lambda/app_isitwednesday_reply app-isitwednesday-reply
+	python -m zipfile -c build/lambda/app_isitwednesday_reply.zip build/lambda/app_isitwednesday_reply
 
 deploy-post-service: package-post-service
 	aws lambda update-function-code \
-		--function-name twitter-wednesday-bot-replace-with-autodeploy \
-		--zip-file fileb://build/lambda/package/twitter-wednesday-bot.zip \
+		--function-name app-isitwednesday-post \
+		--zip-file fileb://build/lambda/app_isitwednesday_post.zip \
 		--no-cli-pager
 
 deploy-reply-service: package-reply-service
 	aws lambda update-function-code \
-		--function-name reply-to-wednesday-hashtags \
-		--zip-file fileb://build/lambda/package/reply-to-wednesday-hashtags.zip \
+		--function-name app-isitwednesday-reply \
+		--zip-file fileb://build/lambda/app_isitwednesday_reply.zip \
 		--no-cli-pager
