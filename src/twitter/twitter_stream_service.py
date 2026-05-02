@@ -24,7 +24,7 @@ def get_rules():
 
 def delete_all_rules(rules):
     if rules is None or "data" not in rules:
-        return None
+        return
 
     ids = list(map(lambda rule: rule["id"], rules["data"]))
     payload = {"delete": {"ids": ids}}
@@ -57,7 +57,7 @@ def set_rules(rules: List[str] = None):
     logging.info(response.json())
 
 
-def get_stream(set):
+def get_stream(_):
     response = requests.get(
         URL_TWITTER_STREAM,
         headers={**get_bearer_auth_header()},

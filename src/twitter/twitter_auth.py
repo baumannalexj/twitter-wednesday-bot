@@ -1,3 +1,4 @@
+import logging
 import os
 
 from requests_oauthlib import OAuth1Session
@@ -26,9 +27,9 @@ def get_3_legged_auth_client():
     try:
         fetch_response = oauth.fetch_request_token(request_token_url)
     except ValueError:
-        print(
-            "There may have been an issue with the consumer_key or consumer_secret you entered."
-        )
+        logging.exception("There may have been an issue with the consumer_key or consumer_secret you entered.")
+        raise
+
     resource_owner_key = fetch_response.get("oauth_token")
     resource_owner_secret = fetch_response.get("oauth_token_secret")
     print("Got OAuth token: %s" % resource_owner_key)
