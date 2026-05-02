@@ -1,30 +1,30 @@
 
-# run $poetry shell prior to making
-build:
-	echo 'hi'
-	poetry env use python3.9
-	poetry install
-	poetry env info --path
+auth:
+	aws login
 
-package:
-	poetry build
-	rm -rf dist/artifact.zip
-	poetry run pip install --upgrade --target dist/package dist/*.whl
-	cd dist/package && zip -r ../artifact.zip . -x '*.pyc'
+install:
+	uv sync
 
-deploy-post-service:
-	aws lambda update-function-code\
- 	--function-name twitter-wednesday-bot-replace-with-autodeploy\
- 	--zip-file fileb://dist/artifact.zip\
+package-post-service:
+	rm -rf build/lambda/twitter-wednesday-bot build/lambda/package/twitter-wednesday-bot.zip
+	uv pip install --target build/lambda/twitter-wednesday-bot .
+	mkdir -p build/lambda/package
+	python -m zipfile -c build/lambda/package/twitter-wednesday-bot.zip build/lambda/twitter-wednesday-bot
 
-# how to set handler and runtime here?
+package-reply-service:
+	rm -rf build/lambda/reply-to-wednesday-hashtags build/lambda/package/reply-to-wednesday-hashtags.zip
+	uv pip install --target build/lambda/reply-to-wednesday-hashtags .
+	mkdir -p build/lambda/package
+	python -m zipfile -c build/lambda/package/reply-to-wednesday-hashtags.zip build/lambda/reply-to-wednesday-hashtags
 
+deploy-post-service: package-post-service
+	aws lambda update-function-code \
+		--function-name twitter-wednesday-bot-replace-with-autodeploy \
+		--zip-file fileb://build/lambda/package/twitter-wednesday-bot.zip \
+		--no-cli-pager
 
-deploy-reply-service:
-	aws lambda update-function-code\
- 	--function-name reply-to-wednesday-hashtags\
- 	--zip-file fileb://dist/artifact.zip
-	#--handler src/listening/lambda_listening.handler how to set handler and runtime here?
-
-
-
+deploy-reply-service: package-reply-service
+	aws lambda update-function-code \
+		--function-name reply-to-wednesday-hashtags \
+		--zip-file fileb://build/lambda/package/reply-to-wednesday-hashtags.zip \
+		--no-cli-pager

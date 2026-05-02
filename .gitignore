@@ -1,7 +1,12 @@
 **/.python-version
 **/.pytest_cache
 **/*.iml
+**/.idea
 **/*pycache*
 **/.DS_Store*
 **/dist
+**/build
 **/package
+**/.venv
+.claude/settings.local.json
+

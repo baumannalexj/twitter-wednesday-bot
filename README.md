@@ -5,24 +5,18 @@
 and responds to the tweet to the let person know which timezones it is Wednesday for. 
 
 Prereqs:
-- Python ^3.9
-- Poetry
+- Python >=3.13
+- [uv](https://docs.astral.sh/uv/)
 
 
-## Start Shell
-
-`$ poetry shell`
-
-
-## Build
-
-``$ make build``
+## Install
+`$ make install`
 
 
 ## Package
-
 `$ make package`
 
 ## Deploy
+`$ make deploy-post-service`
 
-`$ make deploy`
+`$ make deploy-reply-service`
