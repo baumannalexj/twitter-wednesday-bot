@@ -4,7 +4,7 @@ version = "0.1.1"
 description = ""
 readme = "README.md"
 authors = [{name = "alexander baumann", email = "baumannalexj@gmail.com"}]
-requires-python = ">=3.13"
+requires-python = ">=3.13" # keep tied with pyright target-version
 dependencies = [
     "requests>=2.26.0",
     "requests-oauthlib>=1.3.0",
@@ -14,11 +14,46 @@ dependencies = [
 repository = "https://github.com/baumannalexj/twitter-wednesday-bot"
 
 [dependency-groups]
-dev = ["pytest>=5.2"]
+dev = [
+    "pytest>=5.2",
+    "ruff>=0.15.12",
+    "pyright>=1.1.380",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/clients", "src/core"]
+
+
+######## LINTING
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"  # or "standard" / "basic"
+
+
+[tool.ruff]
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+
+[tool.ruff.format]
+# Honors the "magic trailing comma": a trailing comma after the last arg
+# forces the call/signature multi-line. Use trailing commas on calls with
+# 2+ args; calls with 0–1 args stay single-line.
+skip-magic-trailing-comma = false
+
+#### END LINTING
