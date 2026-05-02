@@ -225,7 +225,7 @@ def upload_image_to_twitter(file_to_upload):
     #     #                        headers={"Authorization": f"Bearer {bearer_token}"}
     #     #                        )
     #
-    #     # TODO try to do barebones Basic Auth, this POST was not working correcting,
+    #     # TODO try to do bearbones Basic Auth, this POST was not working correcting,
     #     # username_password = f"{CONSUMER_KEY}:{CONSUMER_SECRET}"
     #     # bytes_encoded = username_password.encode("utf-8")
     #     # base64_username_password = base64.b64encode(bytes_encoded)
