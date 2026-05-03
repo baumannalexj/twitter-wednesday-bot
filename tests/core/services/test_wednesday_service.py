@@ -6,7 +6,7 @@ import pytest
 from clients.twitter_client import TwitterClient
 from core import constants
 from core.models.social_post import TwitterPostModel, TwitterReplyModel
-from core.services.wednesday_service import WednesdayService, _build_twitter_reply
+from core.services.post_service import PostService, _build_twitter_reply
 
 
 @pytest.fixture
@@ -15,8 +15,8 @@ def twitter_mock():
 
 
 @pytest.fixture
-def service(twitter_mock) -> WednesdayService:
-    return WednesdayService(client=twitter_mock)
+def service(twitter_mock) -> PostService:
+    return PostService(client=twitter_mock)
 
 
 @patch("core.services.wednesday_service.is_it_wednesday_somewhere", return_value=True)
@@ -27,8 +27,8 @@ def test_build_reply_when_is_wednesday_somewhere(_, service):
 
 
 @patch("core.services.wednesday_service.is_it_wednesday_somewhere", return_value=True)
-def test_post_for_today_posts_with_media_ids_when_its_wednesday(mock_tz, service, twitter_mock):
-    service.post_for_today()
+def test_post_for_today_posts_with_media_ids_when_its_wednesday(mock_is_it_wednesday_somewhere, service, twitter_mock):
+    service.check_if_wednesday_and_post()
     call_args = twitter_mock.post_tweet.call_args
     # call.kwargs is for older python, use call_args.kwargs
     assert call_args.kwargs["text"] in constants.MESSAGES_ITS_WEDNESDAY
@@ -45,8 +45,12 @@ def test_reply_skips_when_no_results(service, twitter_mock):
 
 
 @patch("core.services.wednesday_service.is_it_wednesday_somewhere", return_value=True)
-def test_reply_to_recent_wednesday_tweets_builds_message(mock_somewhere, service, twitter_mock):
-    twitter_mock.find_recent_hashtags_posts.return_value = [TwitterPostModel(id="eligible_1", message="this is message")]
+def test_reply_to_recent_wednesday_tweets_builds_message(mock_is_it_wednesday_somewhere,
+                                                         service,
+                                                         twitter_mock):
+
+    twitter_mock.find_recent_hashtags_posts.return_value = \
+        [TwitterPostModel(id="eligible_1", message="this is message")]
 
     service.reply_to_recent_wednesday_tweets(datetime.datetime.now(datetime.UTC))
 

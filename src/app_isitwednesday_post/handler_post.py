@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Any
 
-from app_isitwednesday_post import app
+from app_isitwednesday_post import post_service
 
 
 def lambda_handler(event, context):
@@ -12,7 +12,7 @@ def lambda_handler(event, context):
         logging.info("DRY_RUN — skipping Twitter call")
         return {"status": "dry_run_ok"}
 
-    app.wednesday_service.post_for_today()
+    post_service.check_if_wednesday_and_post()
 
     return {
         "statusCode": 200,

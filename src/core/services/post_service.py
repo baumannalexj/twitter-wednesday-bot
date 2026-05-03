@@ -38,11 +38,11 @@ def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
     return TwitterReplyModel(reply_to_id=social_post.id, message=message)
 
 
-class WednesdayService:
+class PostService:
     def __init__(self, client: ITwitterClient):
         self._client = client
 
-    def post_for_today(self) -> None:
+    def check_if_wednesday_and_post(self) -> None:
         """Post a Wednesday or non-Wednesday message based on current time."""
         if is_it_wednesday_somewhere():
             self._client.post_tweet(
