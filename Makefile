@@ -2,6 +2,9 @@
 auth:
 	aws login
 
+test:
+	uv run pytest
+
 install:
 	uv sync --link-mode=copy
 

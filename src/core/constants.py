@@ -7,6 +7,7 @@ MESSAGES_ITS_WEDNESDAY = [
     "Yes, it is Wednesday.",
     "Wednesday has started.",
     "Welcome to Wednesday.",
+    "It is Wednesday somewhere.",
 ]
 
 MESSAGES_NOT_WEDNESDAY = [
@@ -14,6 +15,7 @@ MESSAGES_NOT_WEDNESDAY = [
     "Sorry, you'll have to wait.",
     "Nope.",
     "Not yet.",
+    "It is not.",
 ]
 
 SEARCH_TERMS_WEDNESDAY_HASHTAGS = [
