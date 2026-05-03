@@ -23,9 +23,7 @@ def _wireup() -> tuple:
 
     wednesday_service = wednesday_service.WednesdayService(client=twitter_client)
 
-    example_noop = lambda: print(1)
-
-    return (wednesday_service, example_noop)
+    return wednesday_service
 
 
 app = _wireup()

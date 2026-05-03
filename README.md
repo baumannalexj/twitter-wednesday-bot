@@ -12,6 +12,7 @@ Prereqs:
 ## Install
 `$ make install`
 
+UV will make a .venv directory with the pyproject.toml required python version and dependencies.
 
 ## Package
 `$ make package`

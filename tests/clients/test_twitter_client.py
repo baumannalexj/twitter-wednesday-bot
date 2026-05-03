@@ -81,7 +81,7 @@ class TestTwitterClient:
         mock_session.post.return_value = mock_response
 
         target_id = "111222"
-        result: TwitterPost = client.reply_to_tweet(TwitterReply(target_id, message= "it's not wednesday yet"))
+        result: TwitterPost = client.reply_to_tweet(TwitterReply(target_id, message="it's not wednesday yet"))
 
         # Verify the outgoing request maps to the X API reply structure
         sent_json = mock_session.post.call_args[1]["json"]

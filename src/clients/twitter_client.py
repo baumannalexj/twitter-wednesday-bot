@@ -111,7 +111,6 @@ class TwitterClient(ITwitterClient):
         tweet_response = TweetResponse(**body.get("data"))
         return TwitterPost(tweet_response.id, tweet_response.text)
 
-
     def reply_to_tweet(self, post_reply: TwitterReply) -> TwitterPost:
 
         payload: dict = {"text": post_reply.message, "reply": {"in_reply_to_tweet_id": post_reply.reply_to_id}}

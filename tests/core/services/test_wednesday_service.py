@@ -2,8 +2,8 @@ import datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
-from clients.twitter_client import TwitterClient
 
+from clients.twitter_client import TwitterClient
 from core import constants
 from core.models.social_post import TwitterPost, TwitterReply
 from core.services.wednesday_service import WednesdayService, _build_twitter_reply

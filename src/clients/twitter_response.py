@@ -1,8 +1,9 @@
 import enum
+
 from pydantic import BaseModel
 
 
-class TweetReplySettings(str, enum.Enum):
+class TweetReplySettings(enum.StrEnum):
     """Who can reply to the post
     "everyone" is the default behavior if the parameter is omitted
     """
