@@ -26,6 +26,7 @@ package:
 	echo ""
 
 	rm -rf build/lambda
+	rm -rf build/package
 	mkdir -p build/lambda build/package
 	uv pip install --target build/lambda .
 	cd build/lambda && zip -qr $(CURDIR)/build/package/$(TARGET_LAMBDA_FUNCTION_NAME).zip . \
@@ -39,7 +40,7 @@ _deploy_helper:
 	echo ""
 	aws lambda update-function-code \
 		--function-name $(TARGET_LAMBDA_FUNCTION_NAME) \
-		--zip-file fileb://build/package/lambda.zip \
+		--zip-file fileb://build/package/$(TARGET_LAMBDA_FUNCTION_NAME).zip \
 		--no-cli-pager
 
 	echo "waiting for deploy $(TARGET_LAMBDA_FUNCTION_NAME)..."
