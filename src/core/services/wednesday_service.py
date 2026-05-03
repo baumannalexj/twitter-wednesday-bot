@@ -8,14 +8,14 @@ from core.date_helper import (
     is_it_wednesday_somewhere,
     seconds_until_next_earliest_wednesday,
 )
-from core.models.social_post import SocialPost, TwitterReply
+from core.models.social_post import SocialPostModel, TwitterReplyModel
 from core.ports.i_twitter_client import ITwitterClient
 
 
-def _build_twitter_reply(social_post: SocialPost) -> TwitterReply:
+def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
 
     if is_it_wednesday_somewhere():
-        return TwitterReply(reply_to_id=social_post.id, message="Yes, it is Wednesday somewhere.")
+        return TwitterReplyModel(reply_to_id=social_post.id, message="Yes, it is Wednesday somewhere.")
 
     seconds = seconds_until_next_earliest_wednesday()
     minutes = math.floor(seconds // 60)
@@ -35,7 +35,7 @@ def _build_twitter_reply(social_post: SocialPost) -> TwitterReply:
         unit = "second" if seconds == 1 else "seconds"
         message = f"Buckle up! {seconds} {unit} until Earth enters Wednesday."
 
-    return TwitterReply(reply_to_id=social_post.id, message=message)
+    return TwitterReplyModel(reply_to_id=social_post.id, message=message)
 
 
 class WednesdayService:
@@ -54,7 +54,7 @@ class WednesdayService:
 
     def reply_to_recent_wednesday_tweets(self, start_time_iso: datetime.datetime) -> None:
         """Search for recent #wednesday-tagged tweets and reply to each eligible one."""
-        eligible_posts: list[SocialPost] = self._client.find_recent_hashtags_posts(
+        eligible_posts: list[SocialPostModel] = self._client.find_recent_hashtags_posts(
             hashtags_to_search=constants.SEARCH_TERMS_WEDNESDAY_HASHTAGS, start_time_iso=start_time_iso
         )
         logging.info(f"Replying to {len(eligible_posts)} eligible posts")

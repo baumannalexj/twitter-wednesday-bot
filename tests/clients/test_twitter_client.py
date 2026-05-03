@@ -8,7 +8,7 @@ import pytest
 
 from clients.twitter_client import TwitterClient  # Replace with your actual module name
 from core.date_helper import get_time_min_ago
-from core.models.social_post import TwitterPost, TwitterReply
+from core.models.social_post import TwitterPostModel, TwitterReplyModel
 
 
 def load_response(filename: str):
@@ -42,7 +42,7 @@ class TestTwitterClient:
         mock_session.get.return_value = mock_response
 
         start_time = datetime.datetime.now(datetime.UTC)
-        posts: list[TwitterPost] = client.find_recent_hashtags_posts(["#notarealhashtag"], start_time)
+        posts: list[TwitterPostModel] = client.find_recent_hashtags_posts(["#notarealhashtag"], start_time)
 
         # In response_post_search.json we had 2 eligible tweets
         assert len(posts) == 2
@@ -61,7 +61,7 @@ class TestTwitterClient:
         mock_response.json.return_value = json_data
         mock_session.post.return_value = mock_response
 
-        result: TwitterPost = client.post_tweet("Hello world!")
+        result: TwitterPostModel = client.post_tweet("Hello world!")
 
         # Verify the returned ID matches our JSON file
         assert result.id == "1445827346513514498"
@@ -81,7 +81,7 @@ class TestTwitterClient:
         mock_session.post.return_value = mock_response
 
         target_id = "111222"
-        result: TwitterPost = client.reply_to_tweet(TwitterReply(target_id, message="it's not wednesday yet"))
+        result: TwitterPostModel = client.reply_to_tweet(TwitterReplyModel(target_id, message="it's not wednesday yet"))
 
         # Verify the outgoing request maps to the X API reply structure
         sent_json = mock_session.post.call_args[1]["json"]
