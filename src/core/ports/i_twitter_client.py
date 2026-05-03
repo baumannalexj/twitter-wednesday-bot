@@ -1,7 +1,7 @@
 import datetime
 from abc import ABC, abstractmethod
 
-from core.models.social_post import SocialPost, SocialReply
+from core.models.social_post import SocialPostModel, SocialReply
 
 
 class ITwitterClient(ABC):
@@ -12,16 +12,16 @@ class ITwitterClient(ABC):
         start_time_iso: datetime.datetime,
         since_id: str | None = None,
         max_results: int | None = None,
-    ) -> list[SocialPost]:
+    ) -> list[SocialPostModel]:
         """Search for recent posts based on a query."""
         pass
 
     @abstractmethod
-    def post_tweet(self, text: str, media_ids: list[str] | None = None) -> SocialPost:
+    def post_tweet(self, message_string: str, media_ids: list[str] | None = None) -> SocialPostModel:
         """Post a new message or reply."""
         pass
 
     @abstractmethod
-    def reply_to_tweet(self, post_reply: SocialReply) -> SocialPost:
+    def reply_to_tweet(self, post_reply: SocialReply) -> SocialPostModel:
         """Post a new message or reply."""
         pass

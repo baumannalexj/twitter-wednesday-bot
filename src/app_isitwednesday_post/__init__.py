@@ -1,6 +1,9 @@
 import logging
 import os
 
+from app_isitwednesday_post.app_module import app_module
+from core.services.post_service import PostService  # noqa: F401 # see below for dependency injection
+
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
     level=LOG_LEVEL,
@@ -8,22 +11,15 @@ logging.basicConfig(
 )
 
 
-def _wireup() -> tuple:
-    """testing different import patterns, goal is to hide these imports from the app../src files"""
+# FIXME this is confusing and high maintenance, but works for now while work on dependency injection and IoC
+"""
+Setup Dependency Injection
+ - wireup singletons
+ - import the source
+ - reassign the import name to the singleton
 
-    from clients.twitter_client import TwitterClient
-    from core.services import wednesday_service
+This prevents the IDE from suggesting an import from the source, and suggests to use the singleton
+"""
 
-    twitter_client = TwitterClient(
-        consumer_key=os.environ.get("CONSUMER_KEY"),
-        consumer_secret=os.environ.get("CONSUMER_SECRET"),
-        access_token=os.environ.get("BOT_ACCESS_TOKEN"),
-        access_token_secret=os.environ.get("BOT_ACCESS_TOKEN_SECRET"),
-    )
-
-    wednesday_service = wednesday_service.WednesdayService(client=twitter_client)
-
-    return wednesday_service
-
-
-app = _wireup()
+post_service: PostService = app_module.provide_post_service()
+# add other singleton services here

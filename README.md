@@ -19,7 +19,9 @@ Prereqs:
 UV will make a .venv directory with the pyproject.toml required python version and dependencies.
 
 ## Package
-`$ make package`
+`$ make package-service-post`
+
+`$ make package-service-reply`
 
 ## Deploy
 `$ make deploy-post-service`

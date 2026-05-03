@@ -3,12 +3,12 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class SocialPost(ABC):
+class SocialPostModel(ABC):
     id: str
     message: str
 
 
-class TwitterPost(SocialPost):
+class TwitterPostModel(SocialPostModel):
     id: str
     message: str
 
@@ -19,6 +19,6 @@ class SocialReply(ABC):
     message: str
 
 
-class TwitterReply(SocialReply):
+class TwitterReplyModel(SocialReply):
     reply_to_id: str
     message: str

@@ -8,14 +8,14 @@ from core.date_helper import (
     is_it_wednesday_somewhere,
     seconds_until_next_earliest_wednesday,
 )
-from core.models.social_post import SocialPost, TwitterReply
+from core.models.social_post import SocialPostModel, TwitterReplyModel
 from core.ports.i_twitter_client import ITwitterClient
 
 
-def _build_twitter_reply(social_post: SocialPost) -> TwitterReply:
+def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
 
     if is_it_wednesday_somewhere():
-        return TwitterReply(reply_to_id=social_post.id, message="Yes, it is Wednesday somewhere.")
+        return TwitterReplyModel(reply_to_id=social_post.id, message="Yes, it is Wednesday somewhere.")
 
     seconds = seconds_until_next_earliest_wednesday()
     minutes = math.floor(seconds // 60)
@@ -35,26 +35,26 @@ def _build_twitter_reply(social_post: SocialPost) -> TwitterReply:
         unit = "second" if seconds == 1 else "seconds"
         message = f"Buckle up! {seconds} {unit} until Earth enters Wednesday."
 
-    return TwitterReply(reply_to_id=social_post.id, message=message)
+    return TwitterReplyModel(reply_to_id=social_post.id, message=message)
 
 
-class WednesdayService:
+class PostService:
     def __init__(self, client: ITwitterClient):
         self._client = client
 
-    def post_for_today(self) -> None:
+    def check_if_wednesday_and_post(self) -> None:
         """Post a Wednesday or non-Wednesday message based on current time."""
         if is_it_wednesday_somewhere():
             self._client.post_tweet(
-                text=random.choice(constants.MESSAGES_ITS_WEDNESDAY),
+                message_string=random.choice(constants.MESSAGES_ITS_WEDNESDAY),
                 media_ids=[constants.TWITTER_MEDIA_ID_CAPTAIN_ITS_WEDNESDAY],
             )
         else:
-            self._client.post_tweet(text=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
+            self._client.post_tweet(message_string=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
 
     def reply_to_recent_wednesday_tweets(self, start_time_iso: datetime.datetime) -> None:
         """Search for recent #wednesday-tagged tweets and reply to each eligible one."""
-        eligible_posts: list[SocialPost] = self._client.find_recent_hashtags_posts(
+        eligible_posts: list[SocialPostModel] = self._client.find_recent_hashtags_posts(
             hashtags_to_search=constants.SEARCH_TERMS_WEDNESDAY_HASHTAGS, start_time_iso=start_time_iso
         )
         logging.info(f"Replying to {len(eligible_posts)} eligible posts")

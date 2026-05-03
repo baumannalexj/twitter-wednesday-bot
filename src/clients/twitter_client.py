@@ -5,7 +5,7 @@ import logging
 from requests_oauthlib import OAuth1Session
 
 from clients.twitter_response import TweetResponse
-from core.models.social_post import TwitterPost, TwitterReply
+from core.models.social_post import TwitterPostModel, TwitterReplyModel
 from core.ports.i_twitter_client import ITwitterClient
 
 
@@ -18,12 +18,12 @@ def _datetime_as_iso_with_zulu_as_string(start_time_iso: datetime.datetime) -> s
     return start_time_iso.replace("+00:00", "Z")
 
 
-def _filter_out_ineligible_tweets(response_json) -> list[TwitterPost]:
+def _filter_out_ineligible_tweets(response_json) -> list[TwitterPostModel]:
     tweets_data = response_json.get("data", [])
 
     tweets: list[TweetResponse] = [TweetResponse(**tweet) for tweet in tweets_data]
 
-    eligible_tweets = [TwitterPost(id=tweet.id, message=tweet.text) for tweet in tweets if tweet.is_eligible()]
+    eligible_tweets = [TwitterPostModel(id=tweet.id, message=tweet.text) for tweet in tweets if tweet.is_eligible()]
     return eligible_tweets
 
 
@@ -57,7 +57,7 @@ class TwitterClient(ITwitterClient):
         start_time_iso: datetime.datetime,
         since_id: str | None = None,
         max_results: int | None = None,
-    ) -> list[TwitterPost]:
+    ) -> list[TwitterPostModel]:
 
         query = " OR ".join(hashtags_to_search)
         params: dict = {"query": query}
@@ -95,7 +95,7 @@ class TwitterClient(ITwitterClient):
 
         return eligible_tweets
 
-    def post_tweet(self, message_string: str, media_ids: list[str] | None = None) -> TwitterPost:
+    def post_tweet(self, message_string: str, media_ids: list[str] | None = None) -> TwitterPostModel:
 
         payload: dict = {"text": message_string}
         if media_ids:
@@ -109,9 +109,9 @@ class TwitterClient(ITwitterClient):
         body = response.json()
         logging.info(f"Tweet posted: {json.dumps(body, indent=4)}")
         tweet_response = TweetResponse(**body.get("data"))
-        return TwitterPost(tweet_response.id, tweet_response.text)
+        return TwitterPostModel(tweet_response.id, tweet_response.text)
 
-    def reply_to_tweet(self, post_reply: TwitterReply) -> TwitterPost:
+    def reply_to_tweet(self, post_reply: TwitterReplyModel) -> TwitterPostModel:
 
         payload: dict = {"text": post_reply.message, "reply": {"in_reply_to_tweet_id": post_reply.reply_to_id}}
 
@@ -123,4 +123,4 @@ class TwitterClient(ITwitterClient):
         body = response.json()
         logging.info(f"Tweet reply posted: {json.dumps(body, indent=4)}")
         tweet_response = TweetResponse(**body.get("data"))
-        return TwitterPost(tweet_response.id, tweet_response.text)
+        return TwitterPostModel(tweet_response.id, tweet_response.text)
