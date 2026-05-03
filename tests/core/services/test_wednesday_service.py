@@ -31,7 +31,7 @@ def test_post_for_today_posts_with_media_ids_when_its_wednesday(mock_is_it_wedne
     service.check_if_wednesday_and_post()
     call_args = twitter_mock.post_tweet.call_args
     # call.kwargs is for older python, use call_args.kwargs
-    assert call_args.kwargs["text"] in constants.MESSAGES_ITS_WEDNESDAY
+    assert call_args.kwargs["message_string"] in constants.MESSAGES_ITS_WEDNESDAY
     assert call_args.kwargs["media_ids"] == [constants.TWITTER_MEDIA_ID_CAPTAIN_ITS_WEDNESDAY]
 
 
