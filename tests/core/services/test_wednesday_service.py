@@ -45,12 +45,11 @@ def test_reply_skips_when_no_results(service, twitter_mock):
 
 
 @patch("core.services.post_service.is_it_wednesday_somewhere", return_value=True)
-def test_reply_to_recent_wednesday_tweets_builds_message(mock_is_it_wednesday_somewhere,
-                                                         service,
-                                                         twitter_mock):
+def test_reply_to_recent_wednesday_tweets_builds_message(mock_is_it_wednesday_somewhere, service, twitter_mock):
 
-    twitter_mock.find_recent_hashtags_posts.return_value = \
-        [TwitterPostModel(id="eligible_1", message="this is message")]
+    twitter_mock.find_recent_hashtags_posts.return_value = [
+        TwitterPostModel(id="eligible_1", message="this is message")
+    ]
 
     service.reply_to_recent_wednesday_tweets(datetime.datetime.now(datetime.UTC))
 

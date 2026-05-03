@@ -17,10 +17,7 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "application/json"},
-        "body": {
-            "status": "success",
-            "message": "Finished posting for today."
-        }
+        "body": {"status": "success", "message": "Finished posting for today."},
     }
 
 

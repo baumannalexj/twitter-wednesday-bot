@@ -15,8 +15,9 @@ class AppConfiguration:
 @dataclass(frozen=True)
 class AppModule:
     """Testing different import patterns
-     Goal is to hide these imports from the app../src files
-     """
+    Goal is to hide these imports from the app../src files
+    """
+
     config: AppConfiguration
 
     # SINGLETON PROVIDERS

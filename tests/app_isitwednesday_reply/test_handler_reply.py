@@ -9,7 +9,8 @@ def test_dry_run_skips_twitter():
 
 
 def test_calls_reply_to_recent_wednesday_tweets():
-    with (patch("app_isitwednesday_reply.handler_reply.post_service.reply_to_recent_wednesday_tweets")
-          as mock_reply_to_recent_wednesday_tweets):
+    with patch(
+        "app_isitwednesday_reply.handler_reply.post_service.reply_to_recent_wednesday_tweets"
+    ) as mock_reply_to_recent_wednesday_tweets:
         lambda_handler({}, None)
         mock_reply_to_recent_wednesday_tweets.assert_called_once()

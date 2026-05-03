@@ -46,11 +46,11 @@ class PostService:
         """Post a Wednesday or non-Wednesday message based on current time."""
         if is_it_wednesday_somewhere():
             self._client.post_tweet(
-                text=random.choice(constants.MESSAGES_ITS_WEDNESDAY),
+                message_string=random.choice(constants.MESSAGES_ITS_WEDNESDAY),
                 media_ids=[constants.TWITTER_MEDIA_ID_CAPTAIN_ITS_WEDNESDAY],
             )
         else:
-            self._client.post_tweet(text=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
+            self._client.post_tweet(message_string=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
 
     def reply_to_recent_wednesday_tweets(self, start_time_iso: datetime.datetime) -> None:
         """Search for recent #wednesday-tagged tweets and reply to each eligible one."""

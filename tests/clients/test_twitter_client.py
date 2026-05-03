@@ -42,7 +42,9 @@ class TestTwitterClient:
         mock_session.get.return_value = mock_response
 
         start_time = datetime.datetime.now(datetime.UTC)
-        posts: list[TwitterPostModel] = client.find_recent_hashtags_posts(["#notarealhashtag"], start_time)
+        posts: list[TwitterPostModel] = client.find_recent_hashtags_posts(
+            hashtags_to_search=["#notarealhashtag"], start_time_iso=start_time
+        )
 
         # In response_post_search.json we had 2 eligible tweets
         assert len(posts) == 2
@@ -61,7 +63,7 @@ class TestTwitterClient:
         mock_response.json.return_value = json_data
         mock_session.post.return_value = mock_response
 
-        result: TwitterPostModel = client.post_tweet("Hello world!")
+        result: TwitterPostModel = client.post_tweet(message_string="Hello world!")
 
         # Verify the returned ID matches our JSON file
         assert result.id == "1445827346513514498"
@@ -81,7 +83,9 @@ class TestTwitterClient:
         mock_session.post.return_value = mock_response
 
         target_id = "111222"
-        result: TwitterPostModel = client.reply_to_tweet(TwitterReplyModel(target_id, message="it's not wednesday yet"))
+        result: TwitterPostModel = client.reply_to_tweet(
+            post_reply=TwitterReplyModel(target_id, message="it's not wednesday yet")
+        )
 
         # Verify the outgoing request maps to the X API reply structure
         sent_json = mock_session.post.call_args[1]["json"]
@@ -98,7 +102,7 @@ class TestTwitterClient:
         mock_session.get.return_value = mock_response
 
         test_dt = get_time_min_ago(10)  # same method that lambda_handler injects: "2021-12-25T10:20:00"
-        client.find_recent_hashtags_posts(["#testhashtag"], test_dt)
+        client.find_recent_hashtags_posts(hashtags_to_search=["#testhashtag"], start_time_iso=test_dt)
 
         params = mock_session.get.call_args[1]["params"]
         # Ensure the +00:00 is replaced by Z as per X API requirements
@@ -111,6 +115,8 @@ class TestTwitterClient:
         mock_session.get.return_value = mock_response
 
         with pytest.raises(Exception) as excinfo:
-            client.find_recent_hashtags_posts(["#fail"], datetime.datetime.now(datetime.UTC))
+            client.find_recent_hashtags_posts(
+                hashtags_to_search=["#fail"], start_time_iso=datetime.datetime.now(datetime.UTC)
+            )
 
         assert "Twitter search failed: 400" in str(excinfo.value)

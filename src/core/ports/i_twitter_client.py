@@ -17,7 +17,7 @@ class ITwitterClient(ABC):
         pass
 
     @abstractmethod
-    def post_tweet(self, text: str, media_ids: list[str] | None = None) -> SocialPostModel:
+    def post_tweet(self, message_string: str, media_ids: list[str] | None = None) -> SocialPostModel:
         """Post a new message or reply."""
         pass
 
