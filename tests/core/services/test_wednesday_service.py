@@ -19,14 +19,14 @@ def service(twitter_mock) -> PostService:
     return PostService(client=twitter_mock)
 
 
-@patch("core.services.wednesday_service.is_it_wednesday_somewhere", return_value=True)
+@patch("core.services.post_service.is_it_wednesday_somewhere", return_value=True)
 def test_build_reply_when_is_wednesday_somewhere(_, service):
     twitter_reply = _build_twitter_reply(TwitterPostModel(id="42", message="ssssup"))
     assert twitter_reply.message == "Yes, it is Wednesday somewhere."
     assert twitter_reply.reply_to_id == "42"
 
 
-@patch("core.services.wednesday_service.is_it_wednesday_somewhere", return_value=True)
+@patch("core.services.post_service.is_it_wednesday_somewhere", return_value=True)
 def test_post_for_today_posts_with_media_ids_when_its_wednesday(mock_is_it_wednesday_somewhere, service, twitter_mock):
     service.check_if_wednesday_and_post()
     call_args = twitter_mock.post_tweet.call_args
@@ -44,7 +44,7 @@ def test_reply_skips_when_no_results(service, twitter_mock):
     twitter_mock.reply_to_tweet.assert_not_called()
 
 
-@patch("core.services.wednesday_service.is_it_wednesday_somewhere", return_value=True)
+@patch("core.services.post_service.is_it_wednesday_somewhere", return_value=True)
 def test_reply_to_recent_wednesday_tweets_builds_message(mock_is_it_wednesday_somewhere,
                                                          service,
                                                          twitter_mock):

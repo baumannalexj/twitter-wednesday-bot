@@ -20,7 +20,7 @@ class AppModule:
     config: AppConfiguration
 
     # SINGLETON PROVIDERS
-    def provide_wednesday_service(self) -> PostService:
+    def provide_post_service(self) -> PostService:
         from clients.twitter_client import TwitterClient
         from core.services import post_service
 

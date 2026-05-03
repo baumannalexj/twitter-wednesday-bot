@@ -2,7 +2,7 @@ import logging
 import os
 
 from app_isitwednesday_reply.app_module import app_module
-from core.services import WednesdayService  # noqa: F401 # see below for dependency injection
+from core.services.post_service import PostService  # noqa: F401 # see below for dependency injection
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
@@ -21,5 +21,5 @@ Setup Dependency Injection
 This prevents the IDE from suggesting an import from the source, and suggests to use the singleton
 """
 
-post_service: WednesdayService = app_module.provide_wednesday_service()
+post_service: PostService = app_module.provide_post_service()
 # add other singleton services here
