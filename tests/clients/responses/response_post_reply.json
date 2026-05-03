@@ -1,0 +1,10 @@
+{
+    "data": {
+        "id": "1445827346513514500",
+        "text": "This is a reply to the previous tweet.",
+        "edit_history_tweet_ids": [
+            "1445827346513514501"
+        ],
+        "an_extra_field": ["an extra value"]
+    }
+}

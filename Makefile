@@ -5,26 +5,37 @@ auth:
 install:
 	uv sync
 
-package-post-service:
-	rm -rf build/lambda/twitter-wednesday-bot build/lambda/package/twitter-wednesday-bot.zip
-	uv pip install --target build/lambda/twitter-wednesday-bot .
-	mkdir -p build/lambda/package
-	python -m zipfile -c build/lambda/package/twitter-wednesday-bot.zip build/lambda/twitter-wednesday-bot
+lint:
+	uv run ruff check
 
-package-reply-service:
-	rm -rf build/lambda/reply-to-wednesday-hashtags build/lambda/package/reply-to-wednesday-hashtags.zip
-	uv pip install --target build/lambda/reply-to-wednesday-hashtags .
-	mkdir -p build/lambda/package
-	python -m zipfile -c build/lambda/package/reply-to-wednesday-hashtags.zip build/lambda/reply-to-wednesday-hashtags
+test:
+	uv run pytest
 
-deploy-post-service: package-post-service
+
+# --- Post Service (Poster) ---
+
+package-service-post:
+	rm -rf build/lambda/post-service build/lambda/package/post-service.zip
+	uv pip install --target build/lambda/post-service .
+	mkdir -p build/lambda/package
+	uv run python -m zipfile -c build/lambda/package/post-service.zip build/lambda/post-service
+
+deploy-service-post: package-service-post
 	aws lambda update-function-code \
 		--function-name twitter-wednesday-bot-replace-with-autodeploy \
-		--zip-file fileb://build/lambda/package/twitter-wednesday-bot.zip \
+		--zip-file fileb://build/lambda/package/post-service.zip \
 		--no-cli-pager
 
-deploy-reply-service: package-reply-service
+# --- Reply Service (Replier) ---
+
+package-service-reply:
+	rm -rf build/lambda/reply-service build/lambda/package/reply-service.zip
+	uv pip install --target build/lambda/reply-service .
+	mkdir -p build/lambda/package
+	uv run python -m zipfile -c build/lambda/package/reply-service.zip build/lambda/reply-service
+
+deploy-service-reply: package-service-reply
 	aws lambda update-function-code \
 		--function-name reply-to-wednesday-hashtags \
-		--zip-file fileb://build/lambda/package/reply-to-wednesday-hashtags.zip \
+		--zip-file fileb://build/lambda/package/reply-service.zip \
 		--no-cli-pager
