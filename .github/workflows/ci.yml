@@ -24,5 +24,12 @@ jobs:
       - name: Lint
         run: uv run ruff check
 
+      - name: Install pytest-md
+        run: uv add --dev pytest-md
+
       - name: Test
-        run: uv run pytest
+        run: uv run pytest --md=/tmp/pytest-report.md
+
+      - name: Test summary
+        if: always()
+        run: cat /tmp/pytest-report.md >> $GITHUB_STEP_SUMMARY
