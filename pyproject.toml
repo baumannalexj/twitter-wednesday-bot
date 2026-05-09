@@ -48,12 +48,13 @@ check_untyped_defs = true
 include = ["src", "tests"]
 typeCheckingMode = "strict"  # or "standard" / "basic"
 
-
+[tool.coverage.run]
+omit = ["tests/*"]
 ######## LINTING
 
 [tool.ruff]
 line-length = 120
-src = ["src", "tests"]
+src = ["src"]
 
 [tool.ruff.lint]
 select = [
