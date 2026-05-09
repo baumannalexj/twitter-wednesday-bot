@@ -22,6 +22,7 @@ dev = [
     "aws-lambda-typing>=2.20.0",
     "freezegun>=1.5.5",
     "pytest-env>=1.6.0",
+    "pytest-cov>=7.1.0",
 ]
 
 [build-system]

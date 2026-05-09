@@ -2,14 +2,15 @@ import datetime
 import logging
 import math
 import random
+from dataclasses import dataclass
 
 from core import constants
 from core.date_helper import (
     is_it_wednesday_somewhere,
     seconds_until_next_earliest_wednesday,
 )
-from core.models.social_post import SocialPostModel, TwitterReplyModel
-from core.ports.i_twitter_client import ITwitterClient
+from core.models.social_post import SocialPostModel, TwitterReplyModel, TwitterPostModel
+from core.ports.twitter_client_port import ITwitterClient
 
 
 def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
@@ -25,10 +26,10 @@ def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
     if days > 0:
         unit = "day" if days == 1 else "days"
         message = f"Still {days} {unit} and {hours % 24} hours until Earth sees Wednesday."
-    elif hours > 1:
+    elif hours > 0:
         unit = "hour" if hours == 1 else "hours"
         message = f"We're {hours} {unit} and {minutes % 60} minutes away until Earth hits Wednesday."
-    elif minutes > 1:
+    elif minutes > 0:
         unit = "minute" if minutes == 1 else "minutes"
         message = f"Earth is just {minutes} {unit} and {seconds % 60} seconds from Wednesday."
     else:
@@ -37,20 +38,19 @@ def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
 
     return TwitterReplyModel(reply_to_id=social_post.id, message=message)
 
-
+@dataclass(frozen=True)
 class PostService:
-    def __init__(self, client: ITwitterClient):
-        self._client = client
+    _client: ITwitterClient
 
-    def check_if_wednesday_and_post(self) -> None:
+    def check_if_wednesday_and_post(self) -> SocialPostModel:
         """Post a Wednesday or non-Wednesday message based on current time."""
         if is_it_wednesday_somewhere():
-            self._client.post_tweet(
+            return self._client.post_tweet(
                 message_string=random.choice(constants.MESSAGES_ITS_WEDNESDAY),
                 media_ids=[constants.TWITTER_MEDIA_ID_CAPTAIN_ITS_WEDNESDAY],
             )
         else:
-            self._client.post_tweet(message_string=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
+            return self._client.post_tweet(message_string=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
 
     def reply_to_recent_wednesday_tweets(self, start_time_iso: datetime.datetime) -> None:
         """Search for recent #wednesday-tagged tweets and reply to each eligible one."""

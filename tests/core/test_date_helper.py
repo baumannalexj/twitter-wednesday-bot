@@ -1,83 +1,91 @@
 import datetime
+from zoneinfo import ZoneInfo
 
 import pytest
+from core.date_helper import (
+    get_next_earliest_wednesday,
+    is_it_wednesday_somewhere,
+    EARLIEST_TZ, LATEST_TZ, seconds_until_next_earliest_wednesday, get_time_min_ago, UTC_TZ,
+)
 from freezegun import freeze_time
 
-from core.date_helper import (
-    UTC_TZ,
-    get_next_earliest_wednesday,
-    get_time_min_ago,
-    is_it_wednesday_somewhere,
-    seconds_until_next_earliest_wednesday,
-)
+WEDNESDAY_MIDNIGHT_UTC = datetime.datetime.fromisoformat("2026-05-06T00:00:00Z")
+EARLIEST_WEDNESDAY_MIDNIGHT = WEDNESDAY_MIDNIGHT_UTC.replace(tzinfo=EARLIEST_TZ)
+LATEST_WEDNESDAY_MIDNIGHT = WEDNESDAY_MIDNIGHT_UTC.replace(tzinfo=LATEST_TZ)
+EARLIEST_NEXT_WEDNESDAY_MIDNIGHT = EARLIEST_WEDNESDAY_MIDNIGHT + datetime.timedelta(weeks=1)
 
-# Centralized times dictionary for parametrized tests
-TIMES = {
-    "wednesday_midnight": "2025-01-01T00:00:00Z",
-    "thursday_midnight": "2025-01-02T00:00:00Z",
-    "tuesday_midnight": "2025-01-07T00:00:00Z",
-    "wednesday_0010": "2025-01-01T00:10:00Z",
-}
+CHICAGO_TZ = ZoneInfo("America/Chicago")
+# DST spring forward: Sunday Mar 8 2026, clocks jump 2am → 3am
+CHICAGO_SPRING_FORWARD_BEFORE = datetime.datetime.fromisoformat("2026-03-08T01:59:59").replace(tzinfo=CHICAGO_TZ)  # CST = UTC-6
+CHICAGO_SPRING_FORWARD_AFTER  = datetime.datetime.fromisoformat("2026-03-08T03:00:01").replace(tzinfo=CHICAGO_TZ)  # CDT = UTC-5
+# DST fall back: Sunday Nov 1 2026, clocks fall 2am → 1am
+CHICAGO_FALL_BACK_BEFORE = datetime.datetime.fromisoformat("2026-11-01T01:59:59").replace(tzinfo=CHICAGO_TZ, fold=0)  # CDT = UTC-5
+CHICAGO_FALL_BACK_AFTER  = datetime.datetime.fromisoformat("2026-11-01T01:59:59").replace(tzinfo=CHICAGO_TZ, fold=1)  # CST = UTC-6
 
-ISITWEDNESDAY_TIMES = {
-    # 1 second before GMT+14 hits Wednesday (Tuesday 09:59:59 UTC)
-    "one_sec_before_earliest": "2024-12-31T09:59:59Z",
-    # Exactly midnight GMT+14 (Tuesday 10:00:00 UTC)
-    "midnight_earliest": "2024-12-31T10:00:00Z",
-    # Exactly midnight GMT-12 (Wednesday 12:00:00 UTC)
-    # Note: At this moment, it's Wednesday in ONLY one spot (the last spot)
-    "midnight_latest": "2025-01-01T12:00:00Z",
-    # 1 second after GMT-12 leaves Wednesday (Thursday 12:00:01 UTC)
-    "one_sec_after_latest": "2025-01-02T12:00:01Z",
-    # Standard UTC mid-week check
-    "wednesday_utc_noon": "2025-01-01T12:00:00Z",
-}
 
 
 @pytest.mark.parametrize(
-    "key,expected",
+    "time,expected",
     [
-        ("one_sec_before_earliest", False),
-        ("midnight_earliest", True),
-        ("wednesday_utc_noon", True),
-        # This is the split second GMT-12 enters Wednesday.
-        # It's still Wednesday "somewhere" until Thursday 12:00:00 UTC.
-        ("midnight_latest", True),
-        ("one_sec_after_latest", False),
+        (WEDNESDAY_MIDNIGHT_UTC, True),
+        (EARLIEST_WEDNESDAY_MIDNIGHT, True),
+        (LATEST_WEDNESDAY_MIDNIGHT, True),
+        (LATEST_WEDNESDAY_MIDNIGHT + datetime.timedelta(days=1), False),
+        (EARLIEST_WEDNESDAY_MIDNIGHT - datetime.timedelta(seconds=1), False),
     ],
 )
-def test_is_wednesday_somewhere_boundaries(key, expected):
-    with freeze_time(ISITWEDNESDAY_TIMES[key]):
+def test_is_wednesday_somewhere_boundaries(time, expected):
+    with freeze_time(time):
         assert is_it_wednesday_somewhere() is expected
 
 
 @pytest.mark.parametrize(
-    "key,expected",
+    "time,expected",
     [
-        ("wednesday_midnight", True),
-        ("tuesday_midnight", False),
+        (WEDNESDAY_MIDNIGHT_UTC, EARLIEST_NEXT_WEDNESDAY_MIDNIGHT),
+        (EARLIEST_WEDNESDAY_MIDNIGHT, EARLIEST_NEXT_WEDNESDAY_MIDNIGHT),
+        (LATEST_WEDNESDAY_MIDNIGHT, EARLIEST_NEXT_WEDNESDAY_MIDNIGHT),
+        (LATEST_WEDNESDAY_MIDNIGHT + datetime.timedelta(days=1), EARLIEST_NEXT_WEDNESDAY_MIDNIGHT),
+        (EARLIEST_WEDNESDAY_MIDNIGHT - datetime.timedelta(seconds=1), EARLIEST_WEDNESDAY_MIDNIGHT),
     ],
 )
-def test_is_it_wednesday_somewhere_param(key, expected):
-    with freeze_time(TIMES[key]):
-        assert is_it_wednesday_somewhere() is expected
-
-
-def test_get_next_earliest_wednesday_lands_on_wednesday():
-    with freeze_time(TIMES["wednesday_midnight"]):
+def test_get_next_earliest_wednesday_lands_on_wednesday(time, expected):
+    with freeze_time(time):
         result = get_next_earliest_wednesday()
-        assert result.isoweekday() == 3
+        assert result == expected
+
+
+@pytest.mark.parametrize("frozen_time,expected_seconds", [
+    (EARLIEST_WEDNESDAY_MIDNIGHT - datetime.timedelta(days=1, hours=2), 24*3600 + 2*3600),
+    (EARLIEST_WEDNESDAY_MIDNIGHT - datetime.timedelta(hours=2, minutes=1), 2 * 3600 + 60),
+    (EARLIEST_WEDNESDAY_MIDNIGHT - datetime.timedelta(minutes=1, seconds=58), 60 + 58),
+    (EARLIEST_WEDNESDAY_MIDNIGHT - datetime.timedelta(seconds=1), 1),
+])
+def test_seconds_until_next_earliest_wednesday(frozen_time, expected_seconds):
+    with freeze_time(frozen_time):
+        assert seconds_until_next_earliest_wednesday() == expected_seconds
 
 
 def test_seconds_until_next_earliest_wednesday_is_non_negative():
-    with freeze_time(TIMES["wednesday_midnight"]):
-        assert seconds_until_next_earliest_wednesday() >= 0
+    with freeze_time(WEDNESDAY_MIDNIGHT_UTC + datetime.timedelta(hours=1)):
+        # 550800 seconds: 24-14(Etc timezone) = 10 hours -1 hour from delta = 6 days + 9 hours
+        assert seconds_until_next_earliest_wednesday() == 6*24*3600 + 9*3600
+
+
+@pytest.mark.parametrize("frozen_time,expected_seconds", [
+    (CHICAGO_SPRING_FORWARD_BEFORE, 2*86400 + 2*3600 + 1),
+    (CHICAGO_SPRING_FORWARD_AFTER,  2*86400 + 1*3600 + 59*60 + 59),
+    (CHICAGO_FALL_BACK_BEFORE,      2*86400 + 3*3600 + 1),
+    (CHICAGO_FALL_BACK_AFTER,       2*86400 + 2*3600 + 1),
+])
+def test_seconds_until_next_earliest_wednesday_chicago_daylight_savings(frozen_time, expected_seconds):
+    with freeze_time(frozen_time):
+        assert seconds_until_next_earliest_wednesday() == expected_seconds
 
 
 def test_get_time_min_ago_returns_expected_datetime():
-    with freeze_time(TIMES["wednesday_0010"]):
+    with freeze_time(WEDNESDAY_MIDNIGHT_UTC + datetime.timedelta(minutes=10)):
         dt = get_time_min_ago(minutes_ago=5)
         assert isinstance(dt, datetime.datetime)
-        assert dt.isoformat().startswith("2025-01-01T00:05")
-        # ensure the result is timezone-aware and in UTC
-        assert dt.tzinfo == UTC_TZ
+        assert dt.isoformat().startswith("2026-05-06T00:05")
+        assert dt.tzinfo == UTC_TZ # tz aware, not naive

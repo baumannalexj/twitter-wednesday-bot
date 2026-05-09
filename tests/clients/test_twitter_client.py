@@ -63,7 +63,7 @@ class TestTwitterClient:
         mock_response.json.return_value = json_data
         mock_session.post.return_value = mock_response
 
-        result: TwitterPostModel = client.post_tweet(message_string="Hello world!")
+        result: TwitterPostModel = client.post_tweet(message_string="Hello world!", media_ids=[])
 
         # Verify the returned ID matches our JSON file
         assert result.id == "1445827346513514498"

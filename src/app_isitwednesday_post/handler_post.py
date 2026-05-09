@@ -1,8 +1,7 @@
 import logging
 import os
-from typing import Any
 
-from app_isitwednesday_post import post_service
+from app_isitwednesday_post import app_post_module
 
 
 def lambda_handler(event, context):
@@ -12,7 +11,7 @@ def lambda_handler(event, context):
         logging.info("DRY_RUN — skipping Twitter call")
         return {"status": "dry_run_ok"}
 
-    post_service.check_if_wednesday_and_post()
+    app_post_module.lambda_resource.post_service.check_if_wednesday_and_post()
 
     return {
         "statusCode": 200,
@@ -21,5 +20,8 @@ def lambda_handler(event, context):
     }
 
 
-def _is_dry_run(event) -> bool | None | Any:
-    return os.environ.get("DRY_RUN") == "true" or (isinstance(event, dict) and event.get("dry_run"))
+def _is_dry_run(event) -> bool:
+    return bool(
+        os.environ.get("DRY_RUN") == "true"
+        or (isinstance(event, dict) and event.get("dry_run"))
+    )

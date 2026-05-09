@@ -6,7 +6,7 @@ from requests_oauthlib import OAuth1Session
 
 from clients.twitter_response import TweetResponse
 from core.models.social_post import TwitterPostModel, TwitterReplyModel
-from core.ports.i_twitter_client import ITwitterClient
+from core.ports.twitter_client_port import ITwitterClient
 
 
 def _datetime_as_iso_with_zulu_as_string(start_time_iso: datetime.datetime) -> str:
