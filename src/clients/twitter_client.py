@@ -92,6 +92,10 @@ class TwitterClient(ITwitterClient):
             logging.warning(f"next_token present but pagination not implemented. {meta=}")
 
         eligible_tweets = _filter_out_ineligible_tweets(response_json)
+        if not eligible_tweets:
+            all_tweets: list[TweetResponse] = [TweetResponse(**t) for t in response_json.get("data", [])]
+            ineligible = [{"post_id": t.id, "reply_setting": t.reply_settings} for t in all_tweets]
+            logging.warning(f"No eligible tweets found out of {result_count=}: {ineligible}")
 
         return eligible_tweets
 
@@ -117,7 +121,10 @@ class TwitterClient(ITwitterClient):
 
         response = self._client.post(self.URL_TWEET, json=payload)
         if response.status_code != 201:
-            logging.error(f"Twitter reply failed: {response.status_code=} {response.text=}")
+            logging.error(
+                f"Twitter reply failed for {post_reply.reply_to_id=}: {response.status_code=} {response.text=}."
+
+            )
             raise Exception(f"Twitter reply failed: {response.status_code}")
 
         body = response.json()

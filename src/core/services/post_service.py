@@ -72,7 +72,7 @@ class PostService:
                 replied_post_ids.append(post.id)
             except Exception:
                 error_post_ids.append(post.id)
-                logging.exception(f"Failed to reply to tweet:{post.id}")
+                logging.exception(f"Failed to reply to tweet: {post.id}")
 
         logging.info(f"Replied to: {replied_post_ids}")
         if error_post_ids:
