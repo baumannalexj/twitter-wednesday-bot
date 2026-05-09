@@ -123,7 +123,6 @@ class TwitterClient(ITwitterClient):
         if response.status_code != 201:
             logging.error(
                 f"Twitter reply failed for {post_reply.reply_to_id=}: {response.status_code=} {response.text=}."
-
             )
             raise Exception(f"Twitter reply failed: {response.status_code}")
 
