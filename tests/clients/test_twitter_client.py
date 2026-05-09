@@ -9,6 +9,7 @@ import pytest
 from clients.twitter_client import TwitterClient  # Replace with your actual module name
 from core.date_helper import get_time_min_ago
 from core.models.social_post import TwitterPostModel, TwitterReplyModel
+from tests.clients.responses.twitter_api_json import response_post_reply, response_post_tweet, response_twitter_search
 
 
 def load_response(filename: str):
@@ -34,7 +35,7 @@ class TestTwitterClient:
 
     def test_find_recent_hashtags_posts_from_json(self, client, mock_session):
         """find_recent_hashtags_posts should filter out non eligible tweets"""
-        json_data = load_response("response_twitter_search.json")
+        json_data = response_twitter_search
 
         mock_response = MagicMock()
         mock_response.status_code = 200
@@ -56,14 +57,14 @@ class TestTwitterClient:
     ## --- Tests for post_tweet ---
 
     def test_post_tweet_from_json(self, client, mock_session):
-        json_data = load_response("response_post_tweet.json")
+        json_data = response_post_tweet
 
         mock_response = MagicMock()
         mock_response.status_code = 201
         mock_response.json.return_value = json_data
         mock_session.post.return_value = mock_response
 
-        result: TwitterPostModel = client.post_tweet(message_string="Hello world!")
+        result: TwitterPostModel = client.post_tweet(message_string="Hello world!", media_ids=[])
 
         # Verify the returned ID matches our JSON file
         assert result.id == "1445827346513514498"
@@ -75,7 +76,7 @@ class TestTwitterClient:
     ## --- Tests for reply_to_tweet ---
 
     def test_reply_to_tweet_from_json(self, client, mock_session):
-        json_data = load_response("response_post_reply.json")
+        json_data = response_post_reply
 
         mock_response = MagicMock()
         mock_response.status_code = 201

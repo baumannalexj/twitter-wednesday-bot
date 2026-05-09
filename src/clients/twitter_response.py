@@ -19,7 +19,7 @@ class TweetResponse(BaseModel):
     id: str
     text: str
     possibly_sensitive: bool = False
-    reply_settings: TweetReplySettings = TweetReplySettings.EVERYONE
+    reply_settings: TweetReplySettings = TweetReplySettings.EVERYONE  # api default, including when omitted in response
 
     def is_eligible(self) -> bool:
         return self.reply_settings == TweetReplySettings.EVERYONE and not self.possibly_sensitive

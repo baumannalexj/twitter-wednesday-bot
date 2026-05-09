@@ -22,6 +22,7 @@ dev = [
     "aws-lambda-typing>=2.20.0",
     "freezegun>=1.5.5",
     "pytest-env>=1.6.0",
+    "pytest-cov>=7.1.0",
 ]
 
 [build-system]
@@ -30,6 +31,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = [
+    "src/app_config",
     "src/core",
     "src/clients",
     "src/app_isitwednesday_post",
@@ -47,12 +49,13 @@ check_untyped_defs = true
 include = ["src", "tests"]
 typeCheckingMode = "strict"  # or "standard" / "basic"
 
-
+[tool.coverage.run]
+omit = ["tests/*"]
 ######## LINTING
 
 [tool.ruff]
 line-length = 120
-src = ["src", "tests"]
+src = ["src"]
 
 [tool.ruff.lint]
 select = [
