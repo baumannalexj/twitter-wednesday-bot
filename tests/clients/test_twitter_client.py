@@ -5,10 +5,11 @@ from unittest.mock import MagicMock, patch
 
 import freezegun
 import pytest
-from tests.clients.responses.twitter_api_json import response_twitter_search, response_post_tweet, response_post_reply
+
 from clients.twitter_client import TwitterClient  # Replace with your actual module name
 from core.date_helper import get_time_min_ago
 from core.models.social_post import TwitterPostModel, TwitterReplyModel
+from tests.clients.responses.twitter_api_json import response_post_reply, response_post_tweet, response_twitter_search
 
 
 def load_response(filename: str):
