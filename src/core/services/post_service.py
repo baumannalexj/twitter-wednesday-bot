@@ -9,7 +9,7 @@ from core.date_helper import (
     is_it_wednesday_somewhere,
     seconds_until_next_earliest_wednesday,
 )
-from core.models.social_post import SocialPostModel, TwitterReplyModel, TwitterPostModel
+from core.models.social_post import SocialPostModel, TwitterReplyModel
 from core.ports.twitter_client_port import ITwitterClient
 
 

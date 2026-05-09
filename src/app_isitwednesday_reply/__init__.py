@@ -1,40 +1,23 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from app_isitwednesday_post.config import AppConfiguration, config
-from app_isitwednesday_post.lambda_resource import LambdaResource
+from app_config.config import config
 from clients.twitter_client import TwitterClient
-from core import CoreModule
-from core.services.post_service import PostService  # noqa: F401 # see below for dependency injection
+from core.services.post_service import PostService
 
 
-def _provides_core_module(self) -> CoreModule:
+def _provides_post_service() -> PostService:
     twitter_client = TwitterClient(
-        consumer_key=self.config.twitter_consumer_key,
-        consumer_secret=self.config.twitter_consumer_secret,
-        access_token=self.config.twitter_access_token,
-        access_token_secret=self.config.twitter_access_token_secret,
-
+        consumer_key=config.twitter_consumer_key,
+        consumer_secret=config.twitter_consumer_secret,
+        access_token=config.twitter_access_token,
+        access_token_secret=config.twitter_access_token_secret,
     )
+    return PostService(_client=twitter_client)
 
-    core_module = CoreModule(post_service=PostService(_client=twitter_client))
-    return core_module
 
+@dataclass(frozen=True)
 class AppModule:
-    """Testing different import patterns
-    Goal is to hide these imports from the app../src files
-    """
-
-    config: AppConfiguration
-    lambda_resource: LambdaResource
-
-    def __init__(self, config: AppConfiguration) -> None:
-        self.config = config
-
-        core_module = _provides_core_module(self)
-        self.lambda_resource = LambdaResource(post_service=core_module.post_service)
+    post_service: PostService
 
 
-
-
-
-app_reply_module = AppModule(config=config)
+app_reply_module = AppModule(post_service=_provides_post_service())

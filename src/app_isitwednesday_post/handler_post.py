@@ -11,7 +11,7 @@ def lambda_handler(event, context):
         logging.info("DRY_RUN — skipping Twitter call")
         return {"status": "dry_run_ok"}
 
-    app_post_module.lambda_resource.post_service.check_if_wednesday_and_post()
+    app_post_module.post_service.check_if_wednesday_and_post()
 
     return {
         "statusCode": 200,

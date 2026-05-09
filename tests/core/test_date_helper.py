@@ -2,12 +2,17 @@ import datetime
 from zoneinfo import ZoneInfo
 
 import pytest
-from core.date_helper import (
-    get_next_earliest_wednesday,
-    is_it_wednesday_somewhere,
-    EARLIEST_TZ, LATEST_TZ, seconds_until_next_earliest_wednesday, get_time_min_ago, UTC_TZ,
-)
 from freezegun import freeze_time
+
+from core.date_helper import (
+    EARLIEST_TZ,
+    LATEST_TZ,
+    UTC_TZ,
+    get_next_earliest_wednesday,
+    get_time_min_ago,
+    is_it_wednesday_somewhere,
+    seconds_until_next_earliest_wednesday,
+)
 
 WEDNESDAY_MIDNIGHT_UTC = datetime.datetime.fromisoformat("2026-05-06T00:00:00Z")
 EARLIEST_WEDNESDAY_MIDNIGHT = WEDNESDAY_MIDNIGHT_UTC.replace(tzinfo=EARLIEST_TZ)
@@ -16,11 +21,15 @@ EARLIEST_NEXT_WEDNESDAY_MIDNIGHT = EARLIEST_WEDNESDAY_MIDNIGHT + datetime.timede
 
 CHICAGO_TZ = ZoneInfo("America/Chicago")
 # DST spring forward: Sunday Mar 8 2026, clocks jump 2am → 3am
-CHICAGO_SPRING_FORWARD_BEFORE = datetime.datetime.fromisoformat("2026-03-08T01:59:59").replace(tzinfo=CHICAGO_TZ)  # CST = UTC-6
-CHICAGO_SPRING_FORWARD_AFTER  = datetime.datetime.fromisoformat("2026-03-08T03:00:01").replace(tzinfo=CHICAGO_TZ)  # CDT = UTC-5
+CHICAGO_SPRING_FORWARD_BEFORE =\
+    datetime.datetime.fromisoformat("2026-03-08T01:59:59").replace(tzinfo=CHICAGO_TZ)  # CST = UTC-6
+CHICAGO_SPRING_FORWARD_AFTER  =\
+    datetime.datetime.fromisoformat("2026-03-08T03:00:01").replace(tzinfo=CHICAGO_TZ)  # CDT = UTC-5
 # DST fall back: Sunday Nov 1 2026, clocks fall 2am → 1am
-CHICAGO_FALL_BACK_BEFORE = datetime.datetime.fromisoformat("2026-11-01T01:59:59").replace(tzinfo=CHICAGO_TZ, fold=0)  # CDT = UTC-5
-CHICAGO_FALL_BACK_AFTER  = datetime.datetime.fromisoformat("2026-11-01T01:59:59").replace(tzinfo=CHICAGO_TZ, fold=1)  # CST = UTC-6
+CHICAGO_FALL_BACK_BEFORE =\
+    datetime.datetime.fromisoformat("2026-11-01T01:59:59").replace(tzinfo=CHICAGO_TZ, fold=0)  # CDT = UTC-5
+CHICAGO_FALL_BACK_AFTER  =\
+    datetime.datetime.fromisoformat("2026-11-01T01:59:59").replace(tzinfo=CHICAGO_TZ, fold=1)  # CST = UTC-6
 
 
 
