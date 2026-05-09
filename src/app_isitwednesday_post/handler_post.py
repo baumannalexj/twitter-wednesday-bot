@@ -21,7 +21,4 @@ def lambda_handler(event, context):
 
 
 def _is_dry_run(event) -> bool:
-    return bool(
-        os.environ.get("DRY_RUN") == "true"
-        or (isinstance(event, dict) and event.get("dry_run"))
-    )
+    return bool(os.environ.get("DRY_RUN") == "true" or (isinstance(event, dict) and event.get("dry_run")))

@@ -37,4 +37,5 @@ def test_dry_run_skips_twitter():
 def test_calls_reply_to_recent_wednesday_tweets():
     lambda_handler({}, None)
     mock_post_service.reply_to_recent_wednesday_tweets.assert_called_with(
-        start_time_iso=IS_WEDNESDAY_SOMEWHERE - datetime.timedelta(minutes=config.reply_cron_interval_minutes))
+        start_time_iso=IS_WEDNESDAY_SOMEWHERE - datetime.timedelta(minutes=config.reply_cron_interval_minutes)
+    )

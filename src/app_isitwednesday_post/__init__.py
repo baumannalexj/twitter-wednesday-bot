@@ -11,7 +11,6 @@ def _provides_post_service() -> PostService:
         consumer_secret=config.twitter_consumer_secret,
         access_token=config.twitter_access_token,
         access_token_secret=config.twitter_access_token_secret,
-
     )
 
     return PostService(_client=twitter_client)
@@ -25,4 +24,5 @@ class AppModule:
 
     post_service: PostService
 
-app_post_module = AppModule(post_service = _provides_post_service())
+
+app_post_module = AppModule(post_service=_provides_post_service())

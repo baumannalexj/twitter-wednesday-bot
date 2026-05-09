@@ -12,8 +12,7 @@ MINUTES_LAMBDA_TIMEOUT = 2
 def get_next_earliest_wednesday() -> datetime.datetime:
     now = datetime.datetime.now(tz=EARLIEST_TZ)
     days_until_wednesday = (DAY_OF_WEEK_WEDNESDAY_ISO - now.isoweekday()) % 7 or 7
-    return ((now + datetime.timedelta(days=days_until_wednesday))
-            .replace(hour=0,minute=0, second=0, microsecond=0))
+    return (now + datetime.timedelta(days=days_until_wednesday)).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def is_wednesday_for_tz(tz_offset) -> bool:

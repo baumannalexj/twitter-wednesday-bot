@@ -38,6 +38,7 @@ def _build_twitter_reply(social_post: SocialPostModel) -> TwitterReplyModel:
 
     return TwitterReplyModel(reply_to_id=social_post.id, message=message)
 
+
 @dataclass(frozen=True)
 class PostService:
     _client: ITwitterClient
