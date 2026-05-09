@@ -51,7 +51,10 @@ class PostService:
                 media_ids=[constants.TWITTER_MEDIA_ID_CAPTAIN_ITS_WEDNESDAY],
             )
         else:
-            return self._client.post_tweet(message_string=random.choice(constants.MESSAGES_NOT_WEDNESDAY))
+            """Twitter doesn't allow posting duplicate content, cycle through the messages based on the day."""
+            day = datetime.date.today().toordinal()
+            message = constants.MESSAGES_NOT_WEDNESDAY[day % len(constants.MESSAGES_NOT_WEDNESDAY)]
+            return self._client.post_tweet(message_string=message)
 
     def reply_to_recent_wednesday_tweets(self, start_time_iso: datetime.datetime) -> None:
         """Search for recent #wednesday-tagged tweets and reply to each eligible one."""
