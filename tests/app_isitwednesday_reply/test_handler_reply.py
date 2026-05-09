@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from freezegun import freeze_time
+from app_isitwednesday_reply.handler_reply import lambda_handler  # noqa: F401 — smoke test: fails if packaging is broken
 
 from app_config.config import config
 from app_isitwednesday_reply import AppModule

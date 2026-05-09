@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from app_isitwednesday_post import AppModule
+from app_isitwednesday_post.handler_post import lambda_handler  # noqa: F401 — smoke test: fails if packaging is broken
 from app_isitwednesday_post.handler_post import lambda_handler
 from core.services.post_service import PostService
 

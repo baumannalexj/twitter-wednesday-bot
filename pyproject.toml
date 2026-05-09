@@ -31,6 +31,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = [
+    "src/app_config",
     "src/core",
     "src/clients",
     "src/app_isitwednesday_post",
